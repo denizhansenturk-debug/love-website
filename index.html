@@ -1,21 +1,32 @@
-<!doctype html><html lang='tr'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Sürpriz</title>
+
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}body{margin:0;overflow:hidden;min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#ff7eb3,#ffb6d9)}
-.card{position:relative;z-index:5;background:rgba(255,255,255,.25);backdrop-filter:blur(12px);padding:25px;border-radius:20px;width:min(92%,430px);text-align:center}
-.hero{font-size:70px;animation:b 2s infinite}@keyframes b{50%{transform:translateY(-8px)}}
-button{padding:12px 28px;margin:10px;border:0;border-radius:12px;font-size:20px;cursor:pointer}
-#yes{background:#34c759;color:#fff;transition:.25s}#no{background:#ff3b30;color:#fff}
-#quiz,#end{display:none}#msg{min-height:34px;font-size:22px;font-weight:bold;color:#ff006e;margin:12px 0;position:relative;z-index:20}
-.heart{position:fixed;bottom:-40px;animation:f linear forwards}@keyframes f{to{transform:translateY(-120vh) rotate(360deg);opacity:0}}
+body{margin:0;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;background:linear-gradient(135deg,#ff7eb3,#ffb6d9);font-family:Arial}
+.card{background:#ffffff40;padding:24px;border-radius:20px;backdrop-filter:blur(8px);text-align:center;position:relative;z-index:5;width:min(92%,420px)}
+#quiz,#end{display:none}#msg{margin:14px auto;font-size:22px;font-weight:bold;color:#e60073;position:relative;z-index:999;display:block}
+button{padding:12px 24px;border:0;border-radius:10px;margin:10px;font-size:20px}.yes{background:#2ecc71;color:#fff;position:relative;z-index:1}.no{background:#e74c3c;color:#fff}
+.heart{position:fixed;bottom:-30px;animation:f 6s linear forwards}@keyframes f{to{transform:translateY(-120vh);opacity:0}}
 </style></head><body>
-<div class=card><div id=start><div class=hero>🥰💖</div><h1>Sana Küçük Bir Sürpriz</h1><button onclick=begin()>Ankete Başla ❤️</button></div>
-<div id=quiz><div class=hero>💞</div><h2 id=q></h2><div id=msg></div><button id=yes onclick=yesClick()>Evet ❤️</button><br><button id=no onclick=noClick()>Hayır 💔</button></div><div id=end><h1>🥰 Biliyordum ❤️</h1></div></div>
+<div class=card>
+<div id=start><h1>💖 Sana Küçük Bir Sürpriz</h1><button onclick="begin()">Ankete Başla ❤️</button></div>
+<div id=quiz><h2 id=q></h2><div id=msg></div><button id=yes class=yes onclick="yesClick()">Evet ❤️</button><br><button id=no class=no onclick="noClick()">Hayır 💔</button></div>
+<div id=end><h1>🥰 Biliyordum ❤️</h1></div></div>
 <script>
-const qs=["Beni seviyor musun? ❤️","Benimle çıkar mısın? 💍","Beni yakışıklı buluyor musun? 😎"],msgs=["Emin misin? 🥺","Tekrar düşün ❤️","Hayır çalışmıyor 😂","Lütfen Evet de 🥹","Kaçamazsın 😄"];
-let i=0,g=1,m=0,c=0;
-function reset(){g=1;c=0;yes.style.transform="scale(1)";msg.textContent="";no.style.position="static";q.textContent=qs[i]}
-function begin(){start.style.display="none";quiz.style.display="block";reset();}
-function yesClick(){i++;if(i>=qs.length){quiz.style.display="none";end.style.display="block";return;}reset();}
-function noClick(){msg.textContent=msgs[m++%msgs.length];g+=.25;yes.style.transform=`scale(${g})`;c++;if(c>=5){no.style.position="fixed";no.style.left=Math.random()*(innerWidth-120)+"px";no.style.top=Math.random()*(innerHeight-70)+"px";}}
-setInterval(()=>{let d=document.createElement("div");d.className="heart";d.textContent=["❤️","💖","💕","💘","🥰","🌹"][Math.floor(Math.random()*6)];d.style.left=Math.random()*100+"vw";d.style.fontSize=(20+Math.random()*25)+"px";d.style.animationDuration=(4+Math.random()*3)+"s";document.body.appendChild(d);setTimeout(()=>d.remove(),7000)},300);
+const qs=["Beni seviyor musun? ❤️","Benimle çıkar mısın? 💍","Beni yakışıklı buluyor musun? 😎"],ms=["Emin misin? 🥺","Tekrar düşün ❤️","Hayır çalışmıyor 😂","Lütfen Evet de 🥹","Kaçamazsın 😄"];
+let i=0,g=1,c=0,m=0;
+function begin(){start.style.display="none";quiz.style.display="block";reset()}
+function reset(){q.textContent=qs[i];msg.textContent="";g=1;c=0;yes.style.transform="scale(1)";no.style.position="static"}
+function yesClick(){i++;if(i>=qs.length){quiz.style.display="none";end.style.display="block";return}reset()}
+function noClick(){msg.textContent=ms[m++%ms.length];g+=.25;yes.style.transform=`scale(${g})`;msg.style.marginTop=(10+g*8)+"px";}
+no.addEventListener("mouseenter",()=>{
+ if(c<5)return;
+ no.style.position="fixed";
+ no.style.left=Math.random()*(innerWidth-120)+"px";
+ no.style.top=Math.random()*(innerHeight-60)+"px";
+});
+no.addEventListener("click",()=>{c++;});
+document.addEventListener("click",e=>{if(e.target.id==="no")c++;});
+function enableEscape(){if(c>=5)no.style.pointerEvents="auto";}
+setInterval(enableEscape,100);
+setInterval(()=>{let d=document.createElement("div");d.className="heart";d.textContent=["❤️","💖","💕","💘"][Math.floor(Math.random()*4)];d.style.left=Math.random()*100+"vw";d.style.fontSize=(20+Math.random()*20)+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),6000)},300);
 </script></body></html>
